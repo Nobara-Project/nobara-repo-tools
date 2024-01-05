@@ -1,0 +1,33 @@
+# create key
+gpg --gen-key
+gpg --list-keys
+gpg --export -a 'name used' > RPM-GPG-KEY-nobara
+sudo dnf install rpm
+sudo rpm --import RPM-GPG-KEY-nobara
+rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'
+
+# provide to users for repo gpg key
+mv RPM-GPG-KEY-nobara pubkey.gpg
+
+# sign packages
+sudo dnf install rpm-sign
+
+# By adding/modifying the %__gpg_sign_cmd macro in your .rpmmacros file, you can tell gpg to read the passphrase from a file.
+# Use rpm --showrc to see what your current %__gpg_sign_cmd looks like, and then put that into your .rpmmacros file, like so:
+
+vim ~/.rpmmacros
+----------
+%_signature gpg
+%_gpg_name Thomas\ Crider
+%__gpg_sign_cmd     %{shescape:%{__gpg}} \
+        gpg --no-verbose --no-armor --no-secmem-warning \
+        --batch --pinentry-mode loopback --passphrase-file %{getenv:HOME}/gpg-passkey \
+        %{?_gpg_digest_algo:--digest-algo=%{_gpg_digest_algo}} \
+        %{?_gpg_sign_cmd_extra_args} \
+        %{?_gpg_name:-u %{shescape:%{_gpg_name}}} \
+        -sbo %{shescape:%{?__signature_filename}} \
+        %{?__plaintext_filename:-- %{shescape:%{__plaintext_filename}}}
+----------
+
+# Add the password you used for generating the pubkey above to $HOME/gpg-passkey:
+echo somepassword > $HOME/gpg-passkey
