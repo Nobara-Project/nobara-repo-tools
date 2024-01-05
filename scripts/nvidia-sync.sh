@@ -2,7 +2,7 @@
 
 # NOTE: This script is for NON-PRODUCTION Nvidia driver branches only: new-feature, beta
 # For production branch, place the built rpm files from rpm-sources/appstream/nobara-nvidia-drivers/<driver-version>/RELEASE/$RELEASE
-# into $HOME/nobara/nvidia/$RELEASE/production/<driver-version> and run appstream-sync.sh instead.
+# into $HOME/nobara/appstream/$RELEASE/production/<driver-version> and run appstream-sync.sh instead.
 
 # After building packages from rpm-sources/appstream/nobara-nvidia-drivers/ the resulting rpms are placed in
 # rpm-sources/appstream/nobara-nvidia-drivers/<driver-version>/RELEASE/$RELEASE. If they are not production branch
